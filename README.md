@@ -27,6 +27,82 @@ npm install -g firebase-tools
 dart pub global activate flutterfire_cli
 ```
 
+### Linux Prerequisites (Nobara 43 / KDE Plasma)
+
+Nobara is based on Fedora 43, so use `dnf` for system packages.
+
+**1. Install Flutter system dependencies:**
+
+```bash
+sudo dnf install -y curl git unzip which xz zip
+```
+
+**2. Install Linux desktop development libraries:**
+
+Flutter Linux builds require GTK, CMake, Ninja, and related tooling:
+
+```bash
+sudo dnf install -y \
+  gtk3-devel \
+  clang \
+  cmake \
+  ninja-build \
+  pkg-config \
+  libstdc++-devel \
+  lzma-sdk-devel
+```
+
+**3. Install Node.js (for Firebase CLI):**
+
+```bash
+sudo dnf install -y nodejs npm
+```
+
+**4. Install Flutter SDK:**
+
+Download the latest stable Flutter tarball from [flutter.dev](https://docs.flutter.dev/get-started/install/linux) and extract it:
+
+```bash
+cd ~
+tar xf flutter_linux_*-stable.tar.xz
+```
+
+Add Flutter to your PATH permanently by appending to `~/.bashrc` or `~/.zshrc`:
+
+```bash
+export PATH="$HOME/flutter/bin:$PATH"
+```
+
+Reload your shell:
+
+```bash
+source ~/.bashrc   # or source ~/.zshrc
+```
+
+**5. Verify the installation:**
+
+```bash
+flutter doctor
+```
+
+Expected issues to resolve on a fresh Nobara install:
+- **Android toolchain** — skip unless targeting Android.
+- **Chrome** — install via `sudo dnf install google-chrome-stable` if targeting web.
+- Dismiss any "no devices" warnings until you connect a device or start an emulator.
+
+**6. Install Firebase & FlutterFire CLIs:**
+
+```bash
+npm install -g firebase-tools
+dart pub global activate flutterfire_cli
+```
+
+Ensure the Dart pub cache bin is on your PATH:
+
+```bash
+export PATH="$HOME/.pub-cache/bin:$PATH"
+```
+
 ---
 
 ## Setup After Cloning
@@ -52,7 +128,7 @@ Log in to Firebase, then run FlutterFire configure inside the project folder:
 
 ```bash
 firebase login
-flutterfire configure --platforms=android,web,windows
+flutterfire configure --platforms=android,web,windows,linux
 ```
 
 Select your Firebase project when prompted. This will generate:
@@ -84,6 +160,16 @@ flutter run -d android
 ```bash
 flutter run -d windows
 ```
+
+**Linux (Nobara 43 / KDE Plasma):**
+```bash
+flutter run -d linux
+```
+
+> On Nobara with KDE Plasma, the app window opens natively using GTK. If you see rendering glitches, try setting the `LIBGL_ALWAYS_SOFTWARE=1` environment variable as a workaround while GPU drivers stabilize:
+> ```bash
+> LIBGL_ALWAYS_SOFTWARE=1 flutter run -d linux
+> ```
 
 ---
 
